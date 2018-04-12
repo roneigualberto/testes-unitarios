@@ -16,6 +16,7 @@ import org.junit.rules.ExpectedException;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
+import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 
 public class LocacaoServiceTest {
 	
@@ -41,7 +42,7 @@ public class LocacaoServiceTest {
 
 	}
 
-	@Test(expected = Exception.class)
+	@Test(expected = FilmeSemEstoqueException.class)
 	public void testLocacao_filmeSemEstoque() throws Exception {
 
 		// cenario
