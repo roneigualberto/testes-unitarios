@@ -17,10 +17,10 @@ import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
+import br.ce.wcaquino.exceptions.LocadoraException;
 
 public class LocacaoServiceTest {
-	
-	
+
 	@Rule
 	public ExpectedException expectedEx = ExpectedException.none();
 
@@ -72,8 +72,7 @@ public class LocacaoServiceTest {
 		}
 
 	}
-	
-	
+
 	@Test
 	public void testLocacao_filmeSemEstoque_3() throws Exception {
 
@@ -81,14 +80,42 @@ public class LocacaoServiceTest {
 		LocacaoService service = new LocacaoService();
 		Usuario usuario = new Usuario("Usuario 1");
 		Filme filme = new Filme("Filme 1", 0, 5.0);
-		
+
 		expectedEx.expect(Exception.class);
 		expectedEx.expectMessage("Filme sem estoque");
 
 		// acao
 		service.alugarFilme(usuario, filme);
-		
-		
+	}
+
+	public void testLocacao_usuarioVazio() throws FilmeSemEstoqueException {
+
+		// cenario
+		LocacaoService service = new LocacaoService();
+		Filme filme = new Filme("Filme 1", 1, 4.0);
+
+		// acao
+		try {
+			service.alugarFilme(null, filme);
+			fail();
+		} catch (LocadoraException e) {
+			assertThat(e.getMessage(), is("Usuario vazio"));
+		}
 
 	}
+
+	public void testLocacao_filmeVazio() throws FilmeSemEstoqueException, LocadoraException {
+
+		// cenario
+		LocacaoService service = new LocacaoService();
+		Usuario usuario = new Usuario("Usuario 1");
+		
+		expectedEx.expect(LocadoraException.class);
+		expectedEx.expectMessage("Filme vazio");
+
+		//acao
+		service.alugarFilme(usuario, null);
+
+	}
+
 }
