@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -24,17 +25,29 @@ public class LocacaoServiceTest {
 	@Rule
 	public ExpectedException expectedEx = ExpectedException.none();
 
+	private LocacaoService service;
+
+	private Usuario usuario;
+
+	private Filme filme;
+
+	@Before
+	public void setUp() {
+		service = new LocacaoService();
+		usuario = new Usuario("Usuario 1");
+
+		filme = new Filme("Filme 1", 2, 5.0);
+	}
+
+	@Before
+	public void tearDown() {
+
+	}
+
 	@Test
 	public void testeLocacao() throws Exception {
-
-		// cenario
-		LocacaoService service = new LocacaoService();
-		Usuario usuario = new Usuario("Usuario 1");
-		Filme filme = new Filme("Filme 1", 2, 5.0);
-
 		// acao
-		Locacao locacao;
-		locacao = service.alugarFilme(usuario, filme);
+		Locacao locacao = service.alugarFilme(usuario, filme);
 		// verificacao
 		assertThat(locacao.getValor(), is(equalTo(5.0)));
 		assertThat(isMesmaData(locacao.getDataLocacao(), new Date()), is(true));
@@ -46,8 +59,6 @@ public class LocacaoServiceTest {
 	public void testLocacao_filmeSemEstoque() throws Exception {
 
 		// cenario
-		LocacaoService service = new LocacaoService();
-		Usuario usuario = new Usuario("Usuario 1");
 		Filme filme = new Filme("Filme 1", 0, 5.0);
 
 		// acao
@@ -58,9 +69,6 @@ public class LocacaoServiceTest {
 	@Test
 	public void testLocacao_filmeSemEstoque_2() {
 
-		// cenario
-		LocacaoService service = new LocacaoService();
-		Usuario usuario = new Usuario("Usuario 1");
 		Filme filme = new Filme("Filme 1", 0, 5.0);
 
 		// acao
@@ -77,8 +85,6 @@ public class LocacaoServiceTest {
 	public void testLocacao_filmeSemEstoque_3() throws Exception {
 
 		// cenario
-		LocacaoService service = new LocacaoService();
-		Usuario usuario = new Usuario("Usuario 1");
 		Filme filme = new Filme("Filme 1", 0, 5.0);
 
 		expectedEx.expect(Exception.class);
@@ -108,12 +114,11 @@ public class LocacaoServiceTest {
 
 		// cenario
 		LocacaoService service = new LocacaoService();
-		Usuario usuario = new Usuario("Usuario 1");
-		
+
 		expectedEx.expect(LocadoraException.class);
 		expectedEx.expectMessage("Filme vazio");
 
-		//acao
+		// acao
 		service.alugarFilme(usuario, null);
 
 	}
